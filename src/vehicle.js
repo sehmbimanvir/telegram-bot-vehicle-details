@@ -48,22 +48,25 @@ class Vehicle {
       let postFields = await this.getPostFields()
       let { data } = await axios.post(this.url, qs.stringify(postFields))
       this.crawler = new DOMCrawler(data)
-      if (!this.isResultFound()) {
+      if (!this.isResultFound(data)) {
         return { error: 'No results found' }
       }
-      return this.getFormattedResult()
+      let result = this.getFormattedResult()
+      if (!Object.keys(result).length) {
+        throw 'Error'
+      }
+      return result
     } catch (err) {
       return { error: 'Something went wrong.' }
     }
   }
 
-  isResultFound () {
-    return this.crawler.get(this.tableSelector).length > 0
+  isResultFound (html) {
+    return !html.includes('Please check the number')
   }
 
   getFormattedResult () {
     let result = {}
-    let column = null
     this.crawler.get(`${this.tableSelector} tr`).each((index, row) => {
       this.crawler.get(row).find('td:nth-child(odd)').each((index, tableData) => {
         let $tableData = this.crawler.get(tableData)
