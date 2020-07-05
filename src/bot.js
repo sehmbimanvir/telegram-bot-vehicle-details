@@ -1,4 +1,4 @@
-require('dotenv').config({ path: `${__dirname}/.env` })
+require('dotenv').config({ path: `${__dirname}/../.env` })
 const { Telegraf } = require('telegraf')
 const botToken = process.env['TELEGRAM_BOT_TOKEN']
 const  Vehicle = require('./vehicle')
